@@ -1,0 +1,117 @@
+# Please change the variable settings below if necessary
+
+#########################################################################
+## Paths and Settings  - Do not edit !
+#########################################################################
+
+TMP_DIR = tmp
+LOGS_DIR = logs
+BOWTIE2_OUTPUT_DIR = bowtie_results
+MAPC_OUTPUT = hic_results
+RAW_DIR = rawdata
+
+#######################################################################
+## SYSTEM - PBS - Start Editing Here !!
+#######################################################################
+N_CPU = 4
+LOGFILE = hicpro.log
+
+JOB_NAME = GM12878_split
+JOB_MEM = 10gb
+JOB_WALLTIME = 6:00:00
+JOB_QUEUE = batch
+JOB_MAIL = zhaowenxue@stu.pku.edu.cn
+
+#########################################################################
+## Data
+#########################################################################
+
+PAIR1_EXT = _1
+PAIR2_EXT = _2
+
+#######################################################################
+## Alignment options
+#######################################################################
+
+FORMAT = phred33
+MIN_MAPQ = 0
+
+BOWTIE2_IDX_PATH = /lustre/user/liclab/publicData/reference/Homo_sapiens/UCSC/hg19/Sequence/Bowtie2Index
+BOWTIE2_GLOBAL_OPTIONS = --very-sensitive -L 30 --score-min L,-0.6,-0.2 --end-to-end --reorder
+BOWTIE2_LOCAL_OPTIONS =  --very-sensitive -L 20 --score-min L,-0.6,-0.2 --end-to-end --reorder
+
+#######################################################################
+## Annotation files
+#######################################################################
+
+REFERENCE_GENOME = genome
+GENOME_SIZE = chrom_hg19.sizes
+
+#######################################################################
+## Allele specific
+#######################################################################
+
+ALLELE_SPECIFIC_SNP = 
+
+#######################################################################
+## Digestion Hi-C
+#######################################################################
+
+GENOME_FRAGMENT = HindIII_resfrag_hg19.bed
+LIGATION_SITE = AAGCTAGCTT
+MIN_FRAG_SIZE = 100
+MAX_FRAG_SIZE = 100000
+MIN_INSERT_SIZE = 100
+MAX_INSERT_SIZE = 600
+
+#######################################################################
+## Hi-C processing
+#######################################################################
+
+MIN_CIS_DIST =
+GET_ALL_INTERACTION_CLASSES = 1
+GET_PROCESS_SAM = 1
+RM_SINGLETON = 1
+RM_MULTI = 1
+RM_DUP = 1
+
+#######################################################################
+## Contact Maps
+#######################################################################
+
+BIN_SIZE =  500000 1000000
+MATRIX_FORMAT = upper
+
+#######################################################################
+## ICE Normalization
+#######################################################################
+MAX_ITER = 100
+FILTER_LOW_COUNT_PERC = 0.02
+FILTER_HIGH_COUNT_PERC = 0
+EPS = 0.1
+
+############################################################################################################################
+Contact Maps这一步中的BIN_SIZE可以看不同层级的结构，bin size越小看到的互作层级越小。而HiC实验的分辨率越高，一个binsize中捕捉到的
+互作越多，所以HiC测序深度越深越好。
+Hi-C测序深度
+
+############################################################################################################################
+#创建环境hicpro安装HiC-Pro所需要的软件
+conda create --prefix=/lustre/user/liclab/zhaowx/tools/conda/hicpro python=2.7
+
+source activate /lustre/user/liclab/zhaowx/tools/conda/hicpro
+conda install -p /lustre/user/liclab/zhaowx/tools/conda/hicpro -c bioconda bx-python
+conda install -p /lustre/user/liclab/zhaowx/tools/conda/hicpro -c ipyrad pysam
+conda install -p /lustre/user/liclab/zhaowx/tools/conda/hicpro -c conda-forge numpy
+conda install -p /lustre/user/liclab/zhaowx/tools/conda/hicpro -c conda-forge scipy
+conda install -p /lustre/user/liclab/zhaowx/tools/conda/hicpro -c bioconda iced
+conda deactivate 
+
+#在/lustre/user/liclab/zhaowx/homework/hic-pro位置测试HiC-Pro
+#rawdata位置 /lustre/user/liclab/ganjb/Test_data/Hi-C_exp/K562+GM12878/rawdata
+
+nohup /lustre/user/liclab/zhaowx/tools/HiC-Pro/bin/HiC-Pro \
+-c /lustre/user/liclab/zhaowx/homework/hic-pro/config-hicpro_learn.txt \
+-i /lustre/user/liclab/ganjb/Test_data/Hi-C_exp/K562+GM12878/rawdata \
+-o /lustre/user/liclab/zhaowx/homework/hic-pro/hicpro_results &
+
