@@ -1,0 +1,28 @@
+############################
+####  visualization     ####
+############################
+#HiCPlotter
+conda install -p /lustre/user/liclab/zhaowx/tools/conda/hicpro -c lcls-rhel7 matplotlib
+
+python /lustre/user/liclab/zhaowx/tools/HiCPlotter/HiCPlotter-master/HiCPlotter.py \
+    -f /lustre/user/liclab/zhaowx/homework/hic-pro/hicpro_results/hic_results/matrix/GM12878+2_3/iced/1000000/GM12878+2_3_1000000_iced.matrix \
+    -o /lustre/user/liclab/zhaowx/homework/hic-pro/hic_HiCPlotter/GM12878+2_3 \
+    -wg 1 \
+    -r 100000 \
+    -tri 1 \
+    -bed /lustre/user/liclab/zhaowx/homework/hic-pro/hicpro_results/hic_results/matrix/GM12878+2_3/raw/1000000/GM12878+2_3_1000000_abs.bed \
+    -n GM_1000000_iced -chr chr1 -ptr 0
+   
+# -r: 分辨率
+# -f 输入矩阵
+# -tri: HiC-Pro输入要设置为1
+# -bed: HiC-Pro输入要指定bed
+# -wg: 全基因组的交互
+# -ptr: 绘制三角还是全部
+
+    
+#将HiC-Pro产生的.allValidPairs文件转换成.hic文件用juicer可视化
+bash /lustre/user/liclab/zhaowx/tools/HiC-Pro/bin/utils/hicpro2juicebox.sh -i GM12878+2_3.allValidPairs \
+-g /lustre/user/liclab/zhaowx/tools/HiC-Pro_2.11.4/annotation/chrom_hg19.sizes \
+-j /lustre/user/liclab/zhaowx/tools/Juicer/scripts/common/juicer_tools.jar -t tmp -o . 
+   
