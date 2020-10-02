@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#config-hicpro.txt位置/lustre/user/liclab/zhaowx/tools/HiC-Pro/config-hicpro.txt
 # Please change the variable settings below if necessary
 
 #########################################################################
